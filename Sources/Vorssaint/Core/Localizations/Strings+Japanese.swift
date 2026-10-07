@@ -1065,6 +1065,7 @@ extension Strings {
         focusFollowsMouseName: "マウス追従フォーカス",
         focusFollowsMouseCaption: "ポインタの下にあるウインドウをフォーカスします。",
         focusFollowsMouseDelay: "ホバー遅延",
+        focusFollowsMouseAcrossScreensOnly: "画面間を移動するときのみ",
         focusFollowsMouseRaise: "ウインドウを手前に表示",
         focusFollowsMouseWaitForStop: "ポインタが止まるまで待つ",
         switcherMinimizedPlacementLabel: "最小化されたウインドウ",

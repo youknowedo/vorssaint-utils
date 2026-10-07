@@ -1268,6 +1268,7 @@ struct Strings {
     let focusFollowsMouseName: String
     let focusFollowsMouseCaption: String
     let focusFollowsMouseDelay: String
+    let focusFollowsMouseAcrossScreensOnly: String
     let focusFollowsMouseRaise: String
     let focusFollowsMouseWaitForStop: String
     let switcherMinimizedPlacementLabel: String
@@ -2362,6 +2363,7 @@ extension Strings {
         focusFollowsMouseName: "Foco ao passar o mouse",
         focusFollowsMouseCaption: "Coloca em foco a janela sob o ponteiro.",
         focusFollowsMouseDelay: "Atraso ao passar o mouse",
+        focusFollowsMouseAcrossScreensOnly: "Somente ao mover entre telas",
         focusFollowsMouseRaise: "Trazer a janela para frente",
         focusFollowsMouseWaitForStop: "Esperar o ponteiro parar",
         switcherMinimizedPlacementLabel: "Janelas minimizadas",
@@ -3457,6 +3459,7 @@ extension Strings {
         focusFollowsMouseName: "Focus follows mouse",
         focusFollowsMouseCaption: "Focuses the window under the pointer.",
         focusFollowsMouseDelay: "Hover delay",
+        focusFollowsMouseAcrossScreensOnly: "Only when moving between screens",
         focusFollowsMouseRaise: "Bring the window to the front",
         focusFollowsMouseWaitForStop: "Wait for the pointer to stop",
         switcherMinimizedPlacementLabel: "Minimized windows",

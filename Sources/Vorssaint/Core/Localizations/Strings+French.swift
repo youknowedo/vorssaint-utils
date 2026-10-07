@@ -1065,6 +1065,7 @@ extension Strings {
         focusFollowsMouseName: "Le focus suit la souris",
         focusFollowsMouseCaption: "Active la fenêtre sous le pointeur.",
         focusFollowsMouseDelay: "Délai de survol",
+        focusFollowsMouseAcrossScreensOnly: "Uniquement lors du passage entre les écrans",
         focusFollowsMouseRaise: "Placer la fenêtre au premier plan",
         focusFollowsMouseWaitForStop: "Attendre que le pointeur s’arrête",
         switcherMinimizedPlacementLabel: "Fenêtres réduites",

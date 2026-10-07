@@ -1065,6 +1065,7 @@ extension Strings {
         focusFollowsMouseName: "Odak fareyi takip etsin",
         focusFollowsMouseCaption: "İşaretçinin altındaki pencereye odaklanır.",
         focusFollowsMouseDelay: "Üzerinde bekleme gecikmesi",
+        focusFollowsMouseAcrossScreensOnly: "Yalnızca ekranlar arasında geçerken",
         focusFollowsMouseRaise: "Pencereyi öne getir",
         focusFollowsMouseWaitForStop: "İşaretçinin durmasını bekle",
         switcherMinimizedPlacementLabel: "Küçültülmüş pencereler",

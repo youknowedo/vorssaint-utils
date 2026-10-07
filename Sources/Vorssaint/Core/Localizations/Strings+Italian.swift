@@ -1065,6 +1065,7 @@ extension Strings {
         focusFollowsMouseName: "Il focus segue il mouse",
         focusFollowsMouseCaption: "Mette a fuoco la finestra sotto il puntatore.",
         focusFollowsMouseDelay: "Ritardo al passaggio",
+        focusFollowsMouseAcrossScreensOnly: "Solo quando si passa da uno schermo all’altro",
         focusFollowsMouseRaise: "Porta la finestra in primo piano",
         focusFollowsMouseWaitForStop: "Attendi che il puntatore si fermi",
         switcherMinimizedPlacementLabel: "Finestre ridotte a icona",

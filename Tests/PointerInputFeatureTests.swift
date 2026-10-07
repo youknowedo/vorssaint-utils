@@ -1086,6 +1086,72 @@ enum PointerInputFeatureTests {
         suite.expect(beforeStop != nil && movingFocusState.point == nil
                 && !movingFocusState.hasPendingEvaluation,
                "a canceled handoff after stop or reset cannot rearm focus work")
+        var stoppedScreenState = FocusFollowsMouseState()
+        stoppedScreenState.reset(screenID: 1)
+        stoppedScreenState.recordMovement(to: CGPoint(x: -100, y: -100), at: 45,
+                                          screenID: 2, acrossScreensOnly: true)
+        stoppedScreenState.recordMovement(to: CGPoint(x: -90, y: -100), at: 45.2,
+                                          screenID: 2, acrossScreensOnly: true)
+        suite.expect(stoppedScreenState.nextEvaluation(at: 45.3, delayMilliseconds: 250) == nil,
+                     "screen-only mode with raising waits for movement to stop")
+        let stoppedScreenFocus = stoppedScreenState.nextEvaluation(at: 45.5, delayMilliseconds: 250)
+        suite.expect(stoppedScreenFocus != nil, "screen-only focus supports displays at negative coordinates")
+        if let stoppedScreenFocus { stoppedScreenState.finishEvaluation(stoppedScreenFocus, succeeded: true) }
+        stoppedScreenState.recordMovement(to: CGPoint(x: -50, y: -100), at: 46,
+                                          screenID: 2, acrossScreensOnly: true)
+        suite.expect(!stoppedScreenState.hasPendingEvaluation,
+                     "raising also stops following same-screen movement after its handoff")
+
+        // A screen crossing grants one handoff, not one per hovered window.
+        var screenState = FocusFollowsMouseState()
+        screenState.reset(screenID: 1)
+        func moveOnScreen(_ screen: CGDirectDisplayID?, at time: TimeInterval,
+                          window: CGWindowID = 1) {
+            screenState.recordMovement(to: CGPoint(x: time, y: 10), at: time,
+                                       windowID: window, screenID: screen, acrossScreensOnly: true)
+        }
+        moveOnScreen(1, at: 50)
+        moveOnScreen(1, at: 51, window: 2)
+        suite.expect(!screenState.hasPendingEvaluation,
+                     "hovering other windows on the starting screen does not take focus")
+        moveOnScreen(2, at: 52)
+        suite.expect(screenState.nextEvaluation(at: 52.1, delayMilliseconds: 250) == nil,
+                     "a screen crossing still respects the hover delay")
+        let screenFocus = screenState.nextEvaluation(at: 52.3, delayMilliseconds: 250)
+        suite.expect(screenFocus != nil, "crossing to another screen permits a focus handoff")
+        if let screenFocus { screenState.finishEvaluation(screenFocus, succeeded: true) }
+        moveOnScreen(2, at: 53, window: 2)
+        moveOnScreen(2, at: 54, window: 3)
+        suite.expect(!screenState.hasPendingEvaluation,
+                     "after a handoff, same-screen windows cannot steal focus or cover popovers")
+        moveOnScreen(1, at: 55)
+        let returnFocus = screenState.nextEvaluation(at: 55.3, delayMilliseconds: 250)
+        suite.expect(returnFocus != nil, "returning to the other screen permits another handoff")
+        if let returnFocus { screenState.finishEvaluation(returnFocus, succeeded: false) }
+        moveOnScreen(1, at: 56, window: 2)
+        let retryScreenFocus = screenState.nextEvaluation(at: 56.3, delayMilliseconds: 250)
+        suite.expect(retryScreenFocus != nil,
+                     "crossing over empty desktop can retry on a window without another crossing")
+        moveOnScreen(2, at: 57, window: 2)
+        suite.expect(retryScreenFocus.map(screenState.isCurrent) == false,
+                     "crossing screens invalidates an in-flight lookup even for a spanning window")
+        let beforeScreenReset = screenState.nextEvaluation(at: 57.3, delayMilliseconds: 250)
+        screenState.reset(screenID: 2)
+        if let beforeScreenReset { screenState.finishEvaluation(beforeScreenReset, succeeded: true) }
+        moveOnScreen(2, at: 58, window: 3)
+        suite.expect(!screenState.hasPendingEvaluation,
+                     "click, wake, settings and display resets discard any pending screen handoff")
+        moveOnScreen(nil, at: 59)
+        moveOnScreen(1, at: 60)
+        suite.expect(!screenState.hasPendingEvaluation,
+                     "an unknown screen establishes a fresh baseline without stealing focus")
+        screenState.recordMovement(to: CGPoint(x: 10, y: 10), at: 61)
+        suite.expect(screenState.nextEvaluation(at: 61.3, delayMilliseconds: 250) != nil,
+                     "disabling screen-only mode restores ordinary same-screen hover focus")
+        suite.expect(Defaults.registeredDefaults[DefaultsKey.focusFollowsMouseAcrossScreensOnly] as? Bool == false
+                && SettingsBackupSupport.exportKeys().contains(DefaultsKey.focusFollowsMouseAcrossScreensOnly),
+                     "screen-only focus is opt-in and included in settings backups")
+
         var longDelayFocusState = FocusFollowsMouseState()
         longDelayFocusState.recordMovement(to: CGPoint(x: 40, y: 70), at: 20)
         suite.expect(longDelayFocusState.nextEvaluation(at: 21, delayMilliseconds: 3_000) == nil

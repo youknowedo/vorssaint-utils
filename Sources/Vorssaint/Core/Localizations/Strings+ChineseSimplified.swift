@@ -1065,6 +1065,7 @@ extension Strings {
         focusFollowsMouseName: "悬停聚焦",
         focusFollowsMouseCaption: "聚焦指针下方的窗口。",
         focusFollowsMouseDelay: "悬停延迟",
+        focusFollowsMouseAcrossScreensOnly: "仅在屏幕之间移动时",
         focusFollowsMouseRaise: "将窗口置前",
         focusFollowsMouseWaitForStop: "等待指针停下",
         switcherMinimizedPlacementLabel: "最小化的窗口",

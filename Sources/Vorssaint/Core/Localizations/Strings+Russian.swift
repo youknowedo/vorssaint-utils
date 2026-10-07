@@ -1066,6 +1066,7 @@ extension Strings {
         focusFollowsMouseName: "Фокус следует за мышью",
         focusFollowsMouseCaption: "Фокусирует окно под указателем.",
         focusFollowsMouseDelay: "Задержка наведения",
+        focusFollowsMouseAcrossScreensOnly: "Только при переходе между экранами",
         focusFollowsMouseRaise: "Поднимать окно на передний план",
         focusFollowsMouseWaitForStop: "Ждать, пока указатель остановится",
         switcherMinimizedPlacementLabel: "Свёрнутые окна",

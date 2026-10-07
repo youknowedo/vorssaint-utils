@@ -1066,6 +1066,7 @@ extension Strings {
         focusFollowsMouseName: "마우스를 따라 포커스",
         focusFollowsMouseCaption: "포인터 아래의 윈도우에 포커스를 줍니다.",
         focusFollowsMouseDelay: "호버 지연",
+        focusFollowsMouseAcrossScreensOnly: "화면 사이를 이동할 때만",
         focusFollowsMouseRaise: "윈도우를 앞으로 가져오기",
         focusFollowsMouseWaitForStop: "포인터가 멈출 때까지 기다리기",
         switcherMinimizedPlacementLabel: "최소화된 윈도우",

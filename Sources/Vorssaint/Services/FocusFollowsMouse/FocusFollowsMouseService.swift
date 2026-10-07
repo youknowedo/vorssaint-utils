@@ -38,6 +38,7 @@ final class FocusFollowsMouseService {
 
     func preferencesDidChange() {
         delayMilliseconds = Self.savedDelay()
+        resetMovement()
     }
 
     func stop() {
@@ -54,10 +55,17 @@ final class FocusFollowsMouseService {
             preferencesDidChange()
             return
         }
-        delayMilliseconds = Self.savedDelay()
+        preferencesDidChange()
         guard let mouseMonitor = NSEvent.addGlobalMonitorForEvents(
-            matching: [.mouseMoved, .leftMouseDragged, .rightMouseDragged, .otherMouseDragged],
+            matching: [.mouseMoved, .leftMouseDragged, .rightMouseDragged, .otherMouseDragged,
+                       .leftMouseDown, .rightMouseDown, .otherMouseDown],
             handler: { [weak self] event in
+                if [.leftMouseDown, .rightMouseDown, .otherMouseDown].contains(event.type) {
+                    if UserDefaults.standard.bool(forKey: DefaultsKey.focusFollowsMouseAcrossScreensOnly) {
+                        self?.resetMovement()
+                    }
+                    return
+                }
                 guard let point = event.cgEvent?.location else { return }
                 self?.recordMovement(to: point)
             }
@@ -87,13 +95,21 @@ final class FocusFollowsMouseService {
             return
         }
         guard isRunning else { return }
+        let acrossScreensOnly = UserDefaults.standard.bool(
+            forKey: DefaultsKey.focusFollowsMouseAcrossScreensOnly)
+        if acrossScreensOnly && !nothingIsHeldDown {
+            resetMovement()
+            return
+        }
         // Raising always waits for the pointer to stop, so windows passed on
         // the way are not reshuffled. Without a raise, the user may instead
         // have the delay count time over a window while the pointer moves.
         let waitsForStop = UserDefaults.standard.bool(forKey: DefaultsKey.focusFollowsMouseRaise)
             || UserDefaults.standard.bool(forKey: DefaultsKey.focusFollowsMouseWaitForStop)
         state.recordMovement(to: point, at: ProcessInfo.processInfo.systemUptime,
-                             windowID: waitsForStop ? nil : Self.receivingWindow(at: point))
+                             windowID: waitsForStop ? nil : Self.receivingWindow(at: point),
+                             screenID: acrossScreensOnly ? Self.screenID(at: point) : nil,
+                             acrossScreensOnly: acrossScreensOnly)
         startEvaluationTimerIfNeeded()
     }
 
@@ -111,7 +127,7 @@ final class FocusFollowsMouseService {
     }
 
     private func resetMovement() {
-        state.reset()
+        state.reset(screenID: CGEvent(source: nil).flatMap { Self.screenID(at: $0.location) })
         timer?.invalidate()
         timer = nil
     }
@@ -216,6 +232,14 @@ final class FocusFollowsMouseService {
                 self.finishEvaluation(evaluation, succeeded: true)
             }
         }
+    }
+
+    /// CGEvent locations and CGDisplayBounds share the same global coordinate
+    /// space, including displays above or to the left of the primary display.
+    private static func screenID(at point: CGPoint) -> CGDirectDisplayID? {
+        NSScreen.screens.compactMap {
+            ($0.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber)?.uint32Value
+        }.first { CGDisplayBounds($0).contains(point) }
     }
 
     /// AppKit resolves the window that would receive a click, skipping

@@ -86,6 +86,8 @@ struct FocusFollowsMouseState: Equatable {
     private var windowID: CGWindowID?
     private var lastMovementAt: TimeInterval = 0
     private var movedDuringEvaluation = false
+    private var screenID: CGDirectDisplayID?
+    private var screenHandoffPending = false
 
     var hasPendingEvaluation: Bool {
         point != nil && phase == .pending
@@ -94,8 +96,22 @@ struct FocusFollowsMouseState: Equatable {
     /// With a window ID, the delay counts time over that window, so moving
     /// within it keeps a pending lookup or a completed focus. A canceled
     /// attempt can try again after movement. Without an ID, movement always
-    /// restarts the delay.
-    mutating func recordMovement(to point: CGPoint, at time: TimeInterval, windowID: CGWindowID? = nil) {
+    /// restarts the delay. Screen-only mode permits one successful evaluation
+    /// per crossing; failed lookups can retry when the pointer reaches a window.
+    mutating func recordMovement(to point: CGPoint, at time: TimeInterval, windowID: CGWindowID? = nil,
+                                 screenID: CGDirectDisplayID? = nil, acrossScreensOnly: Bool = false) {
+        if acrossScreensOnly {
+            guard let screenID else {
+                reset()
+                return
+            }
+            if screenID != self.screenID {
+                let crossedScreen = self.screenID != nil
+                reset(screenID: screenID)
+                screenHandoffPending = crossedScreen
+            }
+            guard screenHandoffPending else { return }
+        }
         defer {
             self.point = point
             lastMovementAt = time
@@ -111,7 +127,10 @@ struct FocusFollowsMouseState: Equatable {
         movedDuringEvaluation = false
     }
 
-    mutating func reset() {
+    mutating func reset(screenID: CGDirectDisplayID? = nil) {
+        self.screenID = screenID
+        screenHandoffPending = false
+        windowID = nil
         point = nil
         generation &+= 1
         phase = .pending
@@ -133,6 +152,7 @@ struct FocusFollowsMouseState: Equatable {
     /// for movement, or preserve movement that arrived while the attempt ran.
     mutating func finishEvaluation(_ evaluation: FocusFollowsMouseEvaluation, succeeded: Bool) {
         guard isCurrent(evaluation) else { return }
+        if succeeded { screenHandoffPending = false }
         phase = succeeded ? .completed : .cancelled
         if !succeeded, movedDuringEvaluation {
             movedAt = lastMovementAt

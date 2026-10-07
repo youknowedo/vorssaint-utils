@@ -1065,6 +1065,7 @@ extension Strings {
         focusFollowsMouseName: "Zameranie sleduje myš",
         focusFollowsMouseCaption: "Zameria okno pod kurzorom.",
         focusFollowsMouseDelay: "Oneskorenie pri prejdení",
+        focusFollowsMouseAcrossScreensOnly: "Iba pri prechode medzi obrazovkami",
         focusFollowsMouseRaise: "Vyniesť okno dopredu",
         focusFollowsMouseWaitForStop: "Počkať, kým sa kurzor zastaví",
         switcherMinimizedPlacementLabel: "Minimalizované okná",

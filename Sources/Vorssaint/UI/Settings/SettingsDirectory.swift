@@ -230,6 +230,7 @@ enum SettingsDirectory {
                                         (.focusFollowsMouse, [s.focusFollowsMouseName,
                                                               s.focusFollowsMouseDelay,
                                                               s.focusFollowsMouseRaise,
+                                                              s.focusFollowsMouseAcrossScreensOnly,
                                                               s.focusFollowsMouseWaitForStop]),
                                         (.smoothScroll, [s.smoothScrollName]),
                                         (.linearScroll, [s.linearScrollName, s.linearScrollLinesLabel]),

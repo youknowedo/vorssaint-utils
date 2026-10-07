@@ -1035,6 +1035,7 @@ extension Strings {
         focusFollowsMouseName: "Фокус за вказівником",
         focusFollowsMouseCaption: "Фокусує вікно під вказівником.",
         focusFollowsMouseDelay: "Затримка наведення",
+        focusFollowsMouseAcrossScreensOnly: "Лише під час переходу між екранами",
         focusFollowsMouseRaise: "Піднімати вікно на передній план",
         focusFollowsMouseWaitForStop: "Чекати, поки вказівник зупиниться",
         switcherMinimizedPlacementLabel: "Згорнуті вікна",
