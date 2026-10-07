@@ -109,7 +109,7 @@ Reorder or hide panel sections, choose a compact layout, and export settings to 
 - **Smooth scrolling.** Give your mouse wheel a fluid glide with adjustable speed and response.
 - **Pointer acceleration.** Disable mouse acceleration and restore your previous setting when turned off.
 - **Linear scrolling.** Make every mouse wheel notch scroll the same number of lines, however fast the wheel spins.
-- **Focus follows mouse.** Bring the window under the pointer forward after an adjustable pause. Enable **Only when moving between screens** in Mouse & Trackpad settings to allow one focus handoff after each screen crossing; hovering over other windows on the same screen then leaves focus alone.
+- **Focus follows mouse.** Bring the window under the pointer forward after an adjustable pause.
 - **Scroll direction.** Invert vertical and horizontal mouse scrolling independently of the trackpad.
 - **Scroll sideways while holding a key.** Turn vertical wheel movement into horizontal scrolling while holding a chosen key.
 - **Side buttons.** Use mouse Back and Forward buttons in Finder, browsers and compatible apps.
